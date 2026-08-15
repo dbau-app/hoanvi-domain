@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "https://script.google.com/macros/s/AKfycbx52r_fflvLDlPfC20QSU4v3OEYFqtaKkmpOFPNJfGzAdiLOd4K54SLVAimJhYUoNggIQ/exec" }
+    { "source": "/(.*)", "destination": "/api/proxy" }
   ]
 }
