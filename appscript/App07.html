@@ -1,0 +1,21 @@
+<script>
+  /* ---------- Withdrawal ---------- */
+  document.getElementById('wd-submit').onclick = function(){
+    var amount = document.getElementById('wd-amount').value.replace(/[^\d]/g,'');
+    var bank = document.getElementById('wd-bank').value.trim();
+    var account = document.getElementById('wd-account').value.trim();
+    var holder = document.getElementById('wd-holder').value.trim();
+    var msg = document.getElementById('wd-msg'); msg.className='form-msg';
+    var btn = this;
+    setBtnLoading(btn, true, 'Đang gửi yêu cầu…');
+    call('requestWithdrawal', token, amount, bank, account, holder).then(function(res){
+      setBtnLoading(btn, false);
+      if(!res.success){ msg.textContent=res.message; msg.className='form-msg error'; return; }
+      document.getElementById('wd-amount').value=''; document.getElementById('wd-bank').value='';
+      document.getElementById('wd-account').value=''; document.getElementById('wd-holder').value='';
+      msg.textContent='Đã gửi yêu cầu rút tiền.'; msg.className='form-msg ok';
+      loadDashboard();
+    });
+  };
+
+</script>
