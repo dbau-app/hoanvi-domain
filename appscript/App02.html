@@ -1,72 +1,26 @@
 <script>
   /* ---------- Auth screens ---------- */
-  document.getElementById('show-register').onclick = function(){ showAuthPanel('register-form'); };
-  document.getElementById('show-login').onclick = function(){ showAuthPanel('login-form'); };
+  document.getElementById('show-register').onclick=function(){showAuthPanel('register-form');};
+  document.getElementById('show-login').onclick=function(){showAuthPanel('login-form');};
+  (function(){var saved=localStorage.getItem('hoanvi_login_email');if(saved)document.getElementById('login-email').value=saved;var remembered=localStorage.getItem('hoanvi_remember_login');if(remembered!==null)document.getElementById('remember-login').checked=remembered==='1';})();
 
-  document.getElementById('login-btn').onclick = function(){
-    var email = document.getElementById('login-email').value.trim();
-    var pass = document.getElementById('login-password').value;
-    var msg = document.getElementById('login-msg'); msg.className='form-msg';
-    if(!email || !pass){ msg.textContent='Vui lòng nhập đầy đủ.'; msg.className='form-msg error'; return; }
-    var btn = this;
-    setBtnLoading(btn, true, 'Đang đăng nhập…');
-    call('loginUser', email, pass).then(function(res){
-      setBtnLoading(btn, false);
-      if(!res.success){
-        if(res.needVerify){
-          pendingVerifyEmail = res.email;
-          document.getElementById('verify-email-label').textContent = res.email;
-          document.getElementById('verify-msg').className='form-msg';
-          showAuthPanel('verify-form');
-          return;
-        }
-        msg.textContent=res.message; msg.className='form-msg error'; return;
-      }
-      token = res.token; localStorage.setItem(TOKEN_KEY, token);
-      enterApp();
-    }).catch(function(e){ setBtnLoading(btn, false); msg.textContent='Có lỗi xảy ra, thử lại.'; msg.className='form-msg error'; });
+  document.getElementById('login-btn').onclick=function(){
+    var email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-password').value,msg=document.getElementById('login-msg');msg.className='form-msg';
+    if(!email||!pass){msg.textContent='Vui lòng nhập đầy đủ.';msg.className='form-msg error';return;}
+    var remember=document.getElementById('remember-login').checked;
+    localStorage.setItem('hoanvi_remember_login',remember?'1':'0');
+    if(remember)localStorage.setItem('hoanvi_login_email',email);else localStorage.removeItem('hoanvi_login_email');
+    var btn=this;setBtnLoading(btn,true,'Đang đăng nhập…');
+    call('loginUser',email,pass).then(function(res){
+      setBtnLoading(btn,false);
+      if(!res.success){if(res.needVerify){pendingVerifyEmail=res.email;document.getElementById('verify-email-label').textContent=res.email;document.getElementById('verify-msg').className='form-msg';showAuthPanel('verify-form');return;}msg.textContent=res.message;msg.className='form-msg error';return;}
+      token=res.token;localStorage.setItem(TOKEN_KEY,token);enterApp();
+    }).catch(function(){setBtnLoading(btn,false);msg.textContent='Có lỗi xảy ra, thử lại.';msg.className='form-msg error';});
   };
 
-  document.getElementById('register-btn').onclick = function(){
-    var name = document.getElementById('reg-name').value.trim();
-    var email = document.getElementById('reg-email').value.trim();
-    var pass = document.getElementById('reg-password').value;
-    var msg = document.getElementById('register-msg'); msg.className='form-msg';
-    var btn = this;
-    setBtnLoading(btn, true, 'Đang tạo tài khoản…');
-    call('registerUser', name, email, pass).then(function(res){
-      setBtnLoading(btn, false);
-      if(!res.success){ msg.textContent=res.message; msg.className='form-msg error'; return; }
-      pendingVerifyEmail = res.email;
-      document.getElementById('verify-email-label').textContent = res.email;
-      document.getElementById('verify-msg').className='form-msg';
-      showAuthPanel('verify-form');
-    }).catch(function(e){ setBtnLoading(btn, false); msg.textContent='Có lỗi xảy ra, thử lại.'; msg.className='form-msg error'; });
-  };
+  document.getElementById('register-btn').onclick=function(){var name=document.getElementById('reg-name').value.trim(),email=document.getElementById('reg-email').value.trim(),pass=document.getElementById('reg-password').value,msg=document.getElementById('register-msg');msg.className='form-msg';var btn=this;setBtnLoading(btn,true,'Đang tạo tài khoản…');call('registerUser',name,email,pass).then(function(res){setBtnLoading(btn,false);if(!res.success){msg.textContent=res.message;msg.className='form-msg error';return;}pendingVerifyEmail=res.email;document.getElementById('verify-email-label').textContent=res.email;document.getElementById('verify-msg').className='form-msg';showAuthPanel('verify-form');}).catch(function(){setBtnLoading(btn,false);msg.textContent='Có lỗi xảy ra, thử lại.';msg.className='form-msg error';});};
 
-  document.getElementById('verify-btn').onclick = function(){
-    var code = document.getElementById('verify-code').value.trim();
-    var msg = document.getElementById('verify-msg'); msg.className='form-msg';
-    if(!code){ msg.textContent='Vui lòng nhập mã xác nhận.'; msg.className='form-msg error'; return; }
-    var btn = this;
-    setBtnLoading(btn, true, 'Đang xác nhận…');
-    call('verifyEmail', pendingVerifyEmail, code).then(function(res){
-      setBtnLoading(btn, false);
-      if(!res.success){ msg.textContent=res.message; msg.className='form-msg error'; return; }
-      token = res.token; localStorage.setItem(TOKEN_KEY, token);
-      enterApp();
-    }).catch(function(e){ setBtnLoading(btn, false); msg.textContent='Có lỗi xảy ra, thử lại.'; msg.className='form-msg error'; });
-  };
+  document.getElementById('verify-btn').onclick=function(){var code=document.getElementById('verify-code').value.trim(),msg=document.getElementById('verify-msg');msg.className='form-msg';if(!code){msg.textContent='Vui lòng nhập mã xác nhận.';msg.className='form-msg error';return;}var btn=this;setBtnLoading(btn,true,'Đang xác nhận…');call('verifyEmail',pendingVerifyEmail,code).then(function(res){setBtnLoading(btn,false);if(!res.success){msg.textContent=res.message;msg.className='form-msg error';return;}token=res.token;localStorage.setItem(TOKEN_KEY,token);enterApp();}).catch(function(){setBtnLoading(btn,false);msg.textContent='Có lỗi xảy ra, thử lại.';msg.className='form-msg error';});};
 
-  document.getElementById('resend-code').onclick = function(){
-    if(!pendingVerifyEmail) return;
-    var msg = document.getElementById('verify-msg');
-    showSpinner(true);
-    call('resendVerification', pendingVerifyEmail).then(function(res){
-      showSpinner(false);
-      msg.textContent = res.message;
-      msg.className = res.success ? 'form-msg ok' : 'form-msg error';
-    });
-  };
-
+  document.getElementById('resend-code').onclick=function(){if(!pendingVerifyEmail)return;var msg=document.getElementById('verify-msg');showSpinner(true);call('resendVerification',pendingVerifyEmail).then(function(res){showSpinner(false);msg.textContent=res.message;msg.className=res.success?'form-msg ok':'form-msg error';});};
 </script>
