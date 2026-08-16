@@ -1,0 +1,48 @@
+<script>
+  /* ---------- Home tool ---------- */
+  var currentAffiliateLink = null;
+
+  document.getElementById('get-link-btn').onclick = function(){
+    var url = document.getElementById('link-input').value.trim();
+    var toolMsg = document.getElementById('tool-msg'); toolMsg.classList.remove('show');
+    if(!url) return;
+    var btn = this;
+    setBtnLoading(btn, true, 'Đang xử lý link…');
+    call('createTrackingLink', token, url).then(function(res){
+      setBtnLoading(btn, false);
+      if(!res.success){ toolMsg.textContent = res.message; toolMsg.classList.add('show'); return; }
+      currentAffiliateLink = res.shortLink;
+      document.getElementById('buy-btn').href = res.shortLink;
+      var productPreview = document.getElementById('result-product-preview');
+      var productName = document.getElementById('result-product-name');
+      var productImage = document.getElementById('result-product-image');
+      var productPlaceholder = document.getElementById('result-product-placeholder');
+
+      productName.textContent = res.productName || 'Sản phẩm Shopee';
+
+      var imageUrl = safeImageUrl(res.productImage);
+      if(imageUrl){
+        productImage.src = imageUrl;
+        productImage.style.display = 'block';
+        productPlaceholder.style.display = 'none';
+      } else {
+        productImage.removeAttribute('src');
+        productImage.style.display = 'none';
+        productPlaceholder.style.display = 'flex';
+      }
+      productPreview.style.display = 'flex';
+
+      document.getElementById('result-panel').classList.add('show');
+      document.getElementById('link-input').value='';
+      loadDashboard();
+    }).catch(function(){ setBtnLoading(btn, false); toolMsg.textContent='Có lỗi xảy ra, thử lại.'; toolMsg.classList.add('show'); });
+  };
+  document.getElementById('copy-link-btn').onclick = function(){
+    if(!currentAffiliateLink) return;
+    navigator.clipboard && navigator.clipboard.writeText(currentAffiliateLink);
+    var btn=this, old=btn.textContent;
+    btn.textContent='✓ Đã sao chép'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent=old; btn.classList.remove('copied'); },1500);
+  };
+
+</script>
