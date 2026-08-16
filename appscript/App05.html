@@ -1,0 +1,13 @@
+<script>
+  /* ---------- Tabs ---------- */
+  document.querySelectorAll('nav.tabs button[data-view]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('nav.tabs button[data-view]').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      document.querySelectorAll('#app-screen .view').forEach(function(v){v.classList.remove('active');});
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+      if(btn.dataset.view==='admin') loadAdminPanel();
+    });
+  });
+
+</script>
