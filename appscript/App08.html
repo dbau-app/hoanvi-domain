@@ -1,0 +1,67 @@
+<script>
+  /* ---------- Rendering: Links ---------- */
+  var STATUS_MAP = { 'Chưa có hoa hồng':'s-none', 'Đã ghi nhận hoa hồng':'s-done', 'Đã huỷ':'s-cancelled' };
+  function renderLinks(){
+    var el = document.getElementById('links-container');
+    if(!dash.links.length){
+      el.innerHTML = '<div class="empty"><div class="glyph">+</div><h4>Chưa có link nào</h4><p>Dán link Shopee ở Trang chủ để bắt đầu.</p></div>';
+      return;
+    }
+
+    var html = '<div class="links-list">';
+    dash.links.forEach(function(l){
+      html += '<div class="link-row">';
+      html += '<div class="lr-top"><span class="status '+(STATUS_MAP[l.status]||'s-none')+'">'+escapeHtml(l.status)+'</span><span class="lr-date">'+escapeHtml(l.created)+'</span></div>';
+      html += productBlock(l.productName, l.productImage, 'link-product');
+      html += '<a class="lr-open" href="'+escapeHtml(l.affiliate)+'" target="_blank" rel="noopener">↗ Mở link mua hàng</a>';
+
+      if(l.status==='Đã ghi nhận hoa hồng'){
+        html += '<div class="lr-figures"><div class="figure"><div class="label">Hoa hồng gốc</div><div class="value">'+fmt(l.gross)+'</div></div><div class="figure"><div class="label">Bạn nhận (85%)</div><div class="value mint">'+fmt(l.userShare)+'</div></div></div>';
+      }
+
+      html += '</div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  function renderWallet(){
+    document.getElementById('stat-available').textContent = fmt(dash.balanceAvailable);
+    document.getElementById('stat-lifetime').textContent = fmt(dash.lifetimeCommission);
+    document.getElementById('stat-withdrawn').textContent = fmt(dash.totalWithdrawn);
+    document.getElementById('stat-links').textContent = dash.totalLinks;
+    document.getElementById('chip-balance').textContent = fmt(dash.balanceAvailable);
+    document.getElementById('visual-balance').textContent = fmt(dash.balanceAvailable);
+    document.getElementById('visual-count').textContent = dash.totalLinks;
+    document.getElementById('visual-lifetime').textContent = fmt(dash.lifetimeCommission);
+    document.getElementById('visual-tracking').textContent = dash.user.trackingCode || '—';
+
+    var el = document.getElementById('history-container');
+    if(!dash.transactions.length){ el.innerHTML = '<div class="empty"><div class="glyph">₫</div><h4>Chưa có giao dịch</h4><p>Lịch sử hoa hồng và rút tiền sẽ hiện tại đây.</p></div>'; return; }
+    var html = '<div class="history-list">';
+    dash.transactions.forEach(function(t){
+      var isPlus = t.sign==='plus'; var cls = isPlus?'plus':'minus'; var sign = isPlus?'+':'−';
+      html += '<div class="history-row"><div><div class="htype">'+escapeHtml(t.type)+'</div><div class="hdate">'+t.date+'</div></div><div class="history-right"><div class="hamount '+cls+'">'+sign+fmt(t.amount)+'</div></div></div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  function loadDashboard(){
+    return call('getDashboard', token).then(function(res){
+      if(!res.success){ localStorage.removeItem(TOKEN_KEY); token=null; document.getElementById('app-screen').style.display='none'; document.getElementById('auth-screen').style.display='block'; showAuthPanel('login-form'); return; }
+      dash = res;
+      document.getElementById('user-name-label').textContent = res.user.name;
+      document.getElementById('admin-tab-btn').style.display = (res.user.role==='admin') ? '' : 'none';
+      renderLinks(); renderWallet();
+    });
+  }
+
+  function enterApp(){
+    document.getElementById('auth-screen').style.display='none';
+    document.getElementById('app-screen').style.display='block';
+    showSpinner(true);
+    loadDashboard().then(function(){ showSpinner(false); });
+  }
+
+</script>
