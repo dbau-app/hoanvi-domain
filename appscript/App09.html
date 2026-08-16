@@ -1,0 +1,65 @@
+<script>
+  /* ---------- Admin ---------- */
+  function loadAdminPanel(){
+    showSpinner(true);
+    Promise.all([call('adminGetLinks', token), call('adminGetWithdrawals', token)]).then(function(results){
+      showSpinner(false);
+      var linksRes = results[0], wdRes = results[1];
+      if(!linksRes.success){ document.getElementById('admin-links-container').innerHTML = '<div class="empty"><h4>'+escapeHtml(linksRes.message||'Không có quyền truy cập.')+'</h4></div>'; return; }
+
+      document.getElementById('admin-total-gross').textContent = fmt(linksRes.summary.totalGross);
+      document.getElementById('admin-total-net').textContent = fmt(linksRes.summary.totalNet);
+      document.getElementById('admin-total-user').textContent = fmt(linksRes.summary.totalUserShare);
+      document.getElementById('admin-total-admin').textContent = fmt(linksRes.summary.totalAdminShare);
+
+      var el = document.getElementById('admin-links-container');
+      if(!linksRes.links.length){ el.innerHTML = '<div class="empty"><h4>Chưa có link nào</h4></div>'; }
+      else {
+        el.innerHTML = linksRes.links.map(function(l){
+          var h = '<div class="admin-link-card">';
+          h += '<div class="admin-link-top"><div class="who">'+escapeHtml(l.userName)+'<span>'+escapeHtml(l.userEmail)+' · '+escapeHtml(l.created)+' · sub_id: '+escapeHtml(l.subId)+'</span></div><span class="status '+(STATUS_MAP[l.status]||'s-none')+'">'+escapeHtml(l.status)+'</span></div>';
+          h += productBlock(l.productName, l.productImage, 'admin-product');
+          h += '<div class="admin-link-url">'+escapeHtml(l.affiliate)+'</div>';
+          if(l.status==='Đã ghi nhận hoa hồng'){
+            h += '<div class="admin-link-figures"><div class="figure"><div class="label">Hoa hồng gốc</div><div class="value">'+fmt(l.gross)+'</div></div><div class="figure"><div class="label">Thực nhận</div><div class="value">'+fmt(l.net)+'</div></div><div class="figure"><div class="label">Thành viên (85%)</div><div class="value mint">'+fmt(l.userShare)+'</div></div><div class="figure"><div class="label">Admin (15%)</div><div class="value">'+fmt(l.adminShare)+'</div></div></div>';
+          }
+          if(l.status!=='Đã huỷ'){
+            h += '<div class="admin-link-actions"><input type="text" inputmode="numeric" placeholder="Hoa hồng gốc (đ)" value="'+(l.gross||'')+'" data-gross-for="'+l.id+'">';
+            h += '<button class="mini-btn" data-a="update" data-id="'+l.id+'">Cập nhật hoa hồng</button>';
+            h += '<button class="mini-btn danger" data-a="cancel" data-id="'+l.id+'">Huỷ link</button></div>';
+          }
+          h += '</div>';
+          return h;
+        }).join('');
+
+        el.querySelectorAll('[data-a="update"]').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            var input = el.querySelector('[data-gross-for="'+btn.dataset.id+'"]');
+            var val = input.value.replace(/[^\d.]/g,'');
+            if(!val) return;
+            showSpinner(true);
+            call('adminUpdateLinkCommission', token, btn.dataset.id, val).then(function(){ showSpinner(false); loadAdminPanel(); });
+          });
+        });
+        el.querySelectorAll('[data-a="cancel"]').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            showSpinner(true);
+            call('adminCancelLink', token, btn.dataset.id).then(function(){ showSpinner(false); loadAdminPanel(); });
+          });
+        });
+      }
+
+      var wtbody = document.querySelector('#admin-wd-table tbody');
+      wtbody.innerHTML = wdRes.withdrawals.length ? wdRes.withdrawals.map(function(w){
+        return '<tr><td class="mono">'+w.id+'</td><td>'+escapeHtml(w.userName)+'</td><td>'+fmt(w.amount)+'</td><td>'+escapeHtml(w.bank)+'</td><td>'+escapeHtml(w.account)+'</td><td>'+escapeHtml(w.holder)+'</td><td><button class="mini-btn" data-wid="'+w.id+'">Duyệt, đã chuyển</button></td></tr>';
+      }).join('') : '<tr><td colspan="7" style="color:var(--ink-faint);">Không có yêu cầu nào chờ duyệt.</td></tr>';
+      wtbody.querySelectorAll('[data-wid]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          showSpinner(true);
+          call('adminCompleteWithdrawal', token, btn.dataset.wid).then(function(){ showSpinner(false); loadAdminPanel(); loadDashboard(); });
+        });
+      });
+    });
+  }
+
+</script>
