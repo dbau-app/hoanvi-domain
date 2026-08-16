@@ -1,0 +1,47 @@
+<script>
+  /* ---------- Quên mật khẩu ---------- */
+  var pendingResetEmail = null;
+  document.getElementById('show-forgot').onclick = function(){ showAuthPanel('forgot-form'); };
+  document.getElementById('back-to-login-1').onclick = function(){ showAuthPanel('login-form'); };
+
+  document.getElementById('forgot-btn').onclick = function(){
+    var email = document.getElementById('forgot-email').value.trim();
+    var msg = document.getElementById('forgot-msg'); msg.className='form-msg';
+    if(!email){ msg.textContent='Vui lòng nhập email.'; msg.className='form-msg error'; return; }
+    var btn = this;
+    setBtnLoading(btn, true, 'Đang gửi…');
+    call('requestPasswordReset', email).then(function(res){
+      setBtnLoading(btn, false);
+      if(!res.success){ msg.textContent=res.message; msg.className='form-msg error'; return; }
+      pendingResetEmail = email;
+      document.getElementById('reset-email-label').textContent = email;
+      document.getElementById('reset-msg').className='form-msg';
+      showAuthPanel('reset-form');
+    }).catch(function(){ setBtnLoading(btn, false); msg.textContent='Có lỗi xảy ra, thử lại.'; msg.className='form-msg error'; });
+  };
+
+  document.getElementById('reset-btn').onclick = function(){
+    var code = document.getElementById('reset-code').value.trim();
+    var newPass = document.getElementById('reset-new-password').value;
+    var msg = document.getElementById('reset-msg'); msg.className='form-msg';
+    if(!code || !newPass){ msg.textContent='Vui lòng nhập đầy đủ.'; msg.className='form-msg error'; return; }
+    var btn = this;
+    setBtnLoading(btn, true, 'Đang xử lý…');
+    call('resetPassword', pendingResetEmail, code, newPass).then(function(res){
+      setBtnLoading(btn, false);
+      if(!res.success){ msg.textContent=res.message; msg.className='form-msg error'; return; }
+      token = res.token; localStorage.setItem(TOKEN_KEY, token);
+      enterApp();
+    }).catch(function(){ setBtnLoading(btn, false); msg.textContent='Có lỗi xảy ra, thử lại.'; msg.className='form-msg error'; });
+  };
+
+  document.getElementById('resend-reset-code').onclick = function(){
+    if(!pendingResetEmail) return;
+    var msg = document.getElementById('reset-msg');
+    call('requestPasswordReset', pendingResetEmail).then(function(res){
+      msg.textContent = res.message;
+      msg.className = res.success ? 'form-msg ok' : 'form-msg error';
+    });
+  };
+
+</script>
