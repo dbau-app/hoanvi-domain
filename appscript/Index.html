@@ -8,214 +8,38 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <?!= include('Styles'); ?>
-
 </head>
 <body>
-
 <div class="spinner-overlay" id="spinner"><div class="spinner-ring"></div><div class="spinner-text">Đang xử lý…</div></div>
-
-<!-- ===================== AUTH ===================== -->
 <div id="auth-screen">
   <div class="auth-wrap">
     <div class="brand" style="margin-bottom:22px;"><span class="mark">Hv</span>HoànVí<span class="dot">.</span></div>
-
     <div id="login-form">
-      <h2>Đăng nhập</h2>
-      <p class="sub">Đăng nhập để theo dõi link và ví hoa hồng.</p>
+      <h2>Đăng nhập</h2><p class="sub">Đăng nhập để theo dõi link và ví hoa hồng.</p>
       <div class="form-msg" id="login-msg"></div>
-      <div class="field"><label>Email</label><input type="text" id="login-email" placeholder="ban@email.com"></div>
-      <div class="field">
-        <label>Mật khẩu</label>
-        <input type="password" id="login-password" placeholder="••••••••">
-      </div>
-      <div style="text-align:right;margin:-8px 0 14px;"><a id="show-forgot" style="font-size:12.5px;color:var(--ink-faint);cursor:pointer;text-decoration:none;">Quên mật khẩu?</a></div>
+      <div class="field"><label>Email</label><input type="email" id="login-email" name="username" autocomplete="username" placeholder="ban@email.com"></div>
+      <div class="field"><label>Mật khẩu</label><input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="••••••••"></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);margin:-2px 0 14px;cursor:pointer;"><input type="checkbox" id="remember-login" checked style="accent-color:var(--brand);"> Nhớ đăng nhập trên trình duyệt này</label>
+      <div style="text-align:right;margin:-6px 0 14px;"><a id="show-forgot" style="font-size:12.5px;color:var(--ink-faint);cursor:pointer;text-decoration:none;">Quên mật khẩu?</a></div>
       <button class="btn-primary" id="login-btn">Đăng nhập</button>
       <div class="auth-switch">Chưa có tài khoản? <a id="show-register">Đăng ký ngay</a></div>
     </div>
-
-    <div id="register-form" style="display:none;">
-      <h2>Đăng ký</h2>
-      <p class="sub">Tạo tài khoản bằng email để bắt đầu nhận hoàn tiền.</p>
-      <div class="form-msg" id="register-msg"></div>
-      <div class="field"><label>Họ tên</label><input type="text" id="reg-name" placeholder="Nguyễn Văn A"></div>
-      <div class="field"><label>Email</label><input type="text" id="reg-email" placeholder="ban@email.com"></div>
-      <div class="field"><label>Mật khẩu</label><input type="password" id="reg-password" placeholder="Tối thiểu 6 ký tự"></div>
-      <button class="btn-primary" id="register-btn">Tạo tài khoản</button>
-      <div class="auth-switch">Đã có tài khoản? <a id="show-login">Đăng nhập</a></div>
-    </div>
-
-    <div id="verify-form" style="display:none;">
-      <h2>Xác nhận email</h2>
-      <p class="sub">Mã xác nhận 6 số đã được gửi tới <b id="verify-email-label"></b>.</p>
-      <div class="form-msg" id="verify-msg"></div>
-      <div class="field"><label>Mã xác nhận</label><input type="text" id="verify-code" placeholder="000000" inputmode="numeric" maxlength="6"></div>
-      <button class="btn-primary" id="verify-btn">Xác nhận</button>
-      <div class="auth-switch"><a id="resend-code">Gửi lại mã</a></div>
-    </div>
-
-    <div id="forgot-form" style="display:none;">
-      <h2>Quên mật khẩu</h2>
-      <p class="sub">Nhập email đã đăng ký để nhận mã đặt lại mật khẩu.</p>
-      <div class="form-msg" id="forgot-msg"></div>
-      <div class="field"><label>Email</label><input type="text" id="forgot-email" placeholder="ban@email.com"></div>
-      <button class="btn-primary" id="forgot-btn">Gửi mã đặt lại</button>
-      <div class="auth-switch"><a id="back-to-login-1">Quay lại đăng nhập</a></div>
-    </div>
-
-    <div id="reset-form" style="display:none;">
-      <h2>Đặt lại mật khẩu</h2>
-      <p class="sub">Mã xác nhận 6 số đã được gửi tới <b id="reset-email-label"></b>.</p>
-      <div class="form-msg" id="reset-msg"></div>
-      <div class="field"><label>Mã xác nhận</label><input type="text" id="reset-code" placeholder="000000" inputmode="numeric" maxlength="6"></div>
-      <div class="field"><label>Mật khẩu mới</label><input type="password" id="reset-new-password" placeholder="Tối thiểu 6 ký tự"></div>
-      <button class="btn-primary" id="reset-btn">Đặt lại mật khẩu</button>
-      <div class="auth-switch"><a id="resend-reset-code">Gửi lại mã</a></div>
-    </div>
+    <div id="register-form" style="display:none;"><h2>Đăng ký</h2><p class="sub">Tạo tài khoản bằng email để bắt đầu nhận hoàn tiền.</p><div class="form-msg" id="register-msg"></div><div class="field"><label>Họ tên</label><input type="text" id="reg-name" autocomplete="name" placeholder="Nguyễn Văn A"></div><div class="field"><label>Email</label><input type="email" id="reg-email" autocomplete="email" placeholder="ban@email.com"></div><div class="field"><label>Mật khẩu</label><input type="password" id="reg-password" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự"></div><button class="btn-primary" id="register-btn">Tạo tài khoản</button><div class="auth-switch">Đã có tài khoản? <a id="show-login">Đăng nhập</a></div></div>
+    <div id="verify-form" style="display:none;"><h2>Xác nhận email</h2><p class="sub">Mã xác nhận 6 số đã được gửi tới <b id="verify-email-label"></b>.</p><div class="form-msg" id="verify-msg"></div><div class="field"><label>Mã xác nhận</label><input type="text" id="verify-code" placeholder="000000" inputmode="numeric" maxlength="6"></div><button class="btn-primary" id="verify-btn">Xác nhận</button><div class="auth-switch"><a id="resend-code">Gửi lại mã</a></div></div>
+    <div id="forgot-form" style="display:none;"><h2>Quên mật khẩu</h2><p class="sub">Nhập email đã đăng ký để nhận mã đặt lại mật khẩu.</p><div class="form-msg" id="forgot-msg"></div><div class="field"><label>Email</label><input type="email" id="forgot-email" autocomplete="email" placeholder="ban@email.com"></div><button class="btn-primary" id="forgot-btn">Gửi mã đặt lại</button><div class="auth-switch"><a id="back-to-login-1">Quay lại đăng nhập</a></div></div>
+    <div id="reset-form" style="display:none;"><h2>Đặt lại mật khẩu</h2><p class="sub">Mã xác nhận 6 số đã được gửi tới <b id="reset-email-label"></b>.</p><div class="form-msg" id="reset-msg"></div><div class="field"><label>Mã xác nhận</label><input type="text" id="reset-code" placeholder="000000" inputmode="numeric" maxlength="6"></div><div class="field"><label>Mật khẩu mới</label><input type="password" id="reset-new-password" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự"></div><button class="btn-primary" id="reset-btn">Đặt lại mật khẩu</button><div class="auth-switch"><a id="resend-reset-code">Gửi lại mã</a></div></div>
   </div>
 </div>
 
-<!-- ===================== APP ===================== -->
 <div id="app-screen" style="display:none;">
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="brand"><span class="mark">Hv</span>HoànVí<span class="dot">.</span></div>
-      <nav class="tabs tabs-scroll">
-        <button data-view="home" class="active">Trang chủ</button>
-        <button data-view="links">Link của tôi</button>
-        <button data-view="wallet">Ví của tôi</button>
-        <button data-view="admin" class="admin-tab" id="admin-tab-btn" style="display:none;">Quản trị</button>
-      </nav>
-      <div class="topbar-right">
-        <div class="balance-chip"><span class="coin">₫</span>Khả dụng <b id="chip-balance">0đ</b></div>
-        <span style="font-size:13px;color:var(--ink-soft);" id="user-name-label"></span>
-        <button class="ghost-btn" id="change-pw-btn">Đổi mật khẩu</button>
-        <button class="ghost-btn" id="logout-btn">Đăng xuất</button>
-      </div>
-    </div>
-  </header>
-
+  <header class="topbar"><div class="topbar-inner"><div class="brand"><span class="mark">Hv</span>HoànVí<span class="dot">.</span></div><nav class="tabs tabs-scroll"><button data-view="home" class="active">Trang chủ</button><button data-view="links">Link của tôi</button><button data-view="wallet">Ví của tôi</button><button data-view="admin" class="admin-tab" id="admin-tab-btn" style="display:none;">Quản trị</button></nav><div class="topbar-right"><div class="balance-chip"><span class="coin">₫</span>Khả dụng <b id="chip-balance">0đ</b></div><span style="font-size:13px;color:var(--ink-soft);" id="user-name-label"></span><button class="ghost-btn" id="change-pw-btn">Đổi mật khẩu</button><button class="ghost-btn" id="logout-btn">Đăng xuất</button></div></div></header>
   <main>
-    <!-- HOME -->
-    <section class="view active" id="view-home">
-      <div class="hero">
-        <div>
-          <div class="eyebrow">Hoàn tiền Shopee</div>
-          <h1 class="headline">Dán link, mua hàng,<br>nhận lại tiền vào <span class="accent">ví</span>.</h1>
-          <p class="lede">Dán bất kỳ link sản phẩm Shopee nào — kể cả link rút gọn. Hệ thống tự làm sạch về link gốc và gắn mã affiliate của bạn. Khi đơn có hoa hồng, quản trị viên sẽ cập nhật và bạn nhận 85% hoa hồng thực nhận (sau phí sàn, thuế TNCN) vào ví.</p>
-          <div class="tool-card">
-            <div class="tool-label">Dán link sản phẩm Shopee vào đây</div>
-            <div class="tool-sub">Chỉ hỗ trợ shopee.vn, s.shopee.vn, shope.ee</div>
-            <div class="tool-row">
-              <input type="text" id="link-input" placeholder="https://shopee.vn/san-pham...">
-              <button class="btn-mini-primary" id="get-link-btn">Lấy link hoàn tiền</button>
-            </div>
-            <div class="tool-msg" id="tool-msg"></div>
-            <div class="result-panel" id="result-panel">
-              <div class="product-preview" id="result-product-preview" style="display:none;">
-                <div class="product-image placeholder" id="result-product-placeholder">🛍️</div>
-                <img class="product-image" id="result-product-image" src="" alt="Sản phẩm Shopee" style="display:none;" referrerpolicy="no-referrer">
-                <div class="product-info">
-                  <div class="product-label">Sản phẩm đã chuyển link</div>
-                  <div class="product-name" id="result-product-name">—</div>
-                </div>
-              </div>
-              <a class="buy-btn" id="buy-btn" href="#" target="_blank" rel="noopener">↗ Mua hàng hoàn tiền</a>
-              <button class="copy-link-btn" id="copy-link-btn">🔗 Sao chép link để chia sẻ</button>
-              <div class="notice-box">
-                <div class="notice-title">📌⚠️ Để đơn được ghi nhận:</div>
-                <ul>
-                  <li>✅ Xóa sản phẩm khỏi giỏ (nếu đã có).</li>
-                  <li>✅ Bấm mua hàng và mở bằng trình duyệt.</li>
-                  <li>✅ Thêm lại sản phẩm vào giỏ (đặt hàng trong giỏ hàng thay vì bấm nút MUA NGAY) → Áp mã giảm giá → Thanh toán.</li>
-                  <li>❌ Không xem Shopee Live/Video trước khi mua.</li>
-                  <li>❌ Không bấm link nhiều lần hoặc chuyển sang link khác.</li>
-                  <li>❌ Không bấm nút Mua ngay khi mở link để hạn chế rớt đơn.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-visual">
-          <p style="color:rgba(255,255,255,0.5);font-size:12.5px;margin-bottom:4px;">Số dư khả dụng</p>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;" id="visual-balance">0đ</div>
-          <div class="receipt-preview">
-            <div class="row"><span>Mã tracking của bạn</span><b id="visual-tracking" class="mono">—</b></div>
-            <div class="row"><span>Số link đã chuyển</span><b id="visual-count">0</b></div>
-            <div class="row"><span>Tổng hoa hồng đã nhận</span><b id="visual-lifetime">0đ</b></div>
-            <div class="row"><span>Tỉ lệ chia hoa hồng thực nhận</span><b>85% / 15%</b></div>
-          </div>
-          <h3>Theo dõi minh bạch</h3>
-          <p>Mỗi link chuyển đổi được lưu lại và cập nhật trạng thái khi quản trị viên ghi nhận hoa hồng.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- LINKS -->
-    <section class="view" id="view-links">
-      <div class="section-head"><h2>Link của tôi</h2><p>Toàn bộ link Shopee bạn đã chuyển đổi và hoa hồng tương ứng.</p></div>
-      <div id="links-container"></div>
-    </section>
-
-    <!-- WALLET -->
-    <section class="view" id="view-wallet">
-      <div class="section-head"><h2>Ví của tôi</h2><p>Số dư hoa hồng và lịch sử giao dịch.</p></div>
-      <div class="wallet-grid">
-        <div class="wallet-stat avail"><div class="label">Khả dụng</div><div class="amount" id="stat-available">0đ</div></div>
-        <div class="wallet-stat"><div class="label">Tổng hoa hồng đã nhận</div><div class="amount" id="stat-lifetime">0đ</div></div>
-        <div class="wallet-stat"><div class="label">Đã rút tổng cộng</div><div class="amount" id="stat-withdrawn">0đ</div></div>
-        <div class="wallet-stat"><div class="label">Số link đã chuyển</div><div class="amount" id="stat-links">0</div></div>
-      </div>
-      <div class="wallet-cols">
-        <div class="withdraw-card">
-          <h3>Yêu cầu rút tiền</h3><p>Tối thiểu 50.000đ mỗi lần rút.</p>
-          <div class="form-msg" id="wd-msg"></div>
-          <div class="field"><label>Số tiền muốn rút (đ)</label><input type="text" id="wd-amount" placeholder="500000" inputmode="numeric"></div>
-          <div class="field"><label>Ngân hàng</label><input type="text" id="wd-bank" placeholder="Vietcombank"></div>
-          <div class="field"><label>Số tài khoản</label><input type="text" id="wd-account" placeholder="0123456789"></div>
-          <div class="field"><label>Chủ tài khoản</label><input type="text" id="wd-holder" placeholder="NGUYEN VAN A"></div>
-          <button class="btn-primary" id="wd-submit">Gửi yêu cầu rút tiền</button>
-          <div class="withdraw-note">Yêu cầu sẽ ở trạng thái "Đang xử lý" cho đến khi được quản trị viên duyệt và chuyển khoản.</div>
-        </div>
-        <div><div id="history-container"></div></div>
-      </div>
-    </section>
-
-    <!-- ADMIN -->
-    <section class="view" id="view-admin">
-      <div class="section-head"><h2>Quản trị</h2><p>Nhập hoa hồng Shopee duyệt cho từng link — hệ thống tự trừ 1% phí sàn, 10% thuế TNCN, rồi chia 85% cho thành viên, 15% admin giữ.</p></div>
-      <div class="admin-summary">
-        <div class="card"><div class="label">Tổng hoa hồng gốc</div><div class="amount" id="admin-total-gross">0đ</div></div>
-        <div class="card"><div class="label">Tổng thực nhận (sau phí + thuế)</div><div class="amount" id="admin-total-net">0đ</div></div>
-        <div class="card user"><div class="label">Đã trả thành viên (85%)</div><div class="amount" id="admin-total-user">0đ</div></div>
-        <div class="card admin"><div class="label">Admin giữ lại (15%)</div><div class="amount" id="admin-total-admin">0đ</div></div>
-      </div>
-
-      <div class="section-head tight" style="display:flex;justify-content:space-between;align-items:end;gap:14px;flex-wrap:wrap;">
-        <div><h2>Tất cả link đã chuyển đổi</h2></div>
-        <button class="mini-btn" id="admin-refresh-products-btn">↻ Cập nhật tên & hình sản phẩm</button>
-      </div>
-      <div id="admin-links-container"></div>
-
-      <div class="section-head tight"><h2>Yêu cầu rút tiền chờ duyệt</h2></div>
-      <div class="admin-table-wrap"><table class="admin-table" id="admin-wd-table"><thead><tr><th>Mã YC</th><th>Khách</th><th>Số tiền</th><th>Ngân hàng</th><th>Số TK</th><th>Chủ TK</th><th>Thao tác</th></tr></thead><tbody></tbody></table></div>
-    </section>
-  </main>
-  <footer>HoànVí — dữ liệu lưu trên Google Sheets của bạn.</footer>
+    <section class="view active" id="view-home"><div class="hero"><div><div class="eyebrow">Hoàn tiền Shopee</div><h1 class="headline">Dán link, mua hàng,<br>nhận lại tiền vào <span class="accent">ví</span>.</h1><p class="lede">Dán bất kỳ link sản phẩm Shopee nào — kể cả link rút gọn. Hệ thống tự làm sạch về link gốc và gắn mã affiliate của bạn.</p><div class="tool-card"><div class="tool-label">Dán link sản phẩm Shopee vào đây</div><div class="tool-sub">Hỗ trợ shopee.vn, s.shopee.vn, shope.ee, shp.ee và các link Shopee rút gọn.</div><div class="tool-row"><input type="text" id="link-input" placeholder="https://shopee.vn/san-pham..."><button class="btn-mini-primary" id="get-link-btn">Lấy link hoàn tiền</button></div><div class="tool-msg" id="tool-msg"></div><div class="result-panel" id="result-panel"><div class="product-preview" id="result-product-preview" style="display:none;"><div class="product-image placeholder" id="result-product-placeholder">🛍️</div><img class="product-image" id="result-product-image" src="" alt="Sản phẩm Shopee" style="display:none;" referrerpolicy="no-referrer"><div class="product-info"><div class="product-label">Sản phẩm đã chuyển link</div><div class="product-name" id="result-product-name">—</div></div></div><a class="buy-btn" id="buy-btn" href="#" target="_blank" rel="noopener">↗ Mua hàng hoàn tiền</a><button class="copy-link-btn" id="copy-link-btn">🔗 Sao chép link để chia sẻ</button><div class="notice-box"><div class="notice-title">📌⚠️ Để đơn được ghi nhận:</div><ul><li>✅ Xóa sản phẩm khỏi giỏ (nếu đã có).</li><li>✅ Bấm mua hàng và mở bằng trình duyệt.</li><li>✅ Thêm lại sản phẩm vào giỏ → Áp mã giảm giá → Thanh toán.</li><li>❌ Không xem Shopee Live/Video trước khi mua.</li><li>❌ Không bấm link nhiều lần hoặc chuyển sang link khác.</li><li>❌ Không bấm nút Mua ngay khi mở link để hạn chế rớt đơn.</li></ul></div></div></div></div><div class="hero-visual"><p style="color:rgba(255,255,255,0.5);font-size:12.5px;margin-bottom:4px;">Số dư khả dụng</p><div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;" id="visual-balance">0đ</div><div class="receipt-preview"><div class="row"><span>Mã tracking của bạn</span><b id="visual-tracking" class="mono">—</b></div><div class="row"><span>Số link đã chuyển</span><b id="visual-count">0</b></div><div class="row"><span>Tổng hoa hồng đã nhận</span><b id="visual-lifetime">0đ</b></div><div class="row"><span>Tỉ lệ chia hoa hồng thực nhận</span><b>85% / 15%</b></div></div><h3>Theo dõi minh bạch</h3><p>Mỗi link chuyển đổi được lưu lại và cập nhật trạng thái khi quản trị viên ghi nhận hoa hồng.</p></div></div></section>
+    <section class="view" id="view-links"><div class="section-head"><h2>Link của tôi</h2><p>Toàn bộ link Shopee bạn đã chuyển đổi và hoa hồng tương ứng.</p></div><div id="links-container"></div></section>
+    <section class="view" id="view-wallet"><div class="section-head"><h2>Ví của tôi</h2><p>Số dư hoa hồng và lịch sử giao dịch.</p></div><div class="wallet-grid"><div class="wallet-stat avail"><div class="label">Khả dụng</div><div class="amount" id="stat-available">0đ</div></div><div class="wallet-stat"><div class="label">Tổng hoa hồng đã nhận</div><div class="amount" id="stat-lifetime">0đ</div></div><div class="wallet-stat"><div class="label">Đã rút tổng cộng</div><div class="amount" id="stat-withdrawn">0đ</div></div><div class="wallet-stat"><div class="label">Số link đã chuyển</div><div class="amount" id="stat-links">0</div></div></div><div class="wallet-cols"><div class="withdraw-card"><h3>Yêu cầu rút tiền</h3><p>Tối thiểu 50.000đ mỗi lần rút.</p><div class="form-msg" id="wd-msg"></div><div class="field"><label>Số tiền muốn rút (đ)</label><input type="text" id="wd-amount" placeholder="500000" inputmode="numeric"></div><div class="field"><label>Ngân hàng</label><input type="text" id="wd-bank" placeholder="Vietcombank"></div><div class="field"><label>Số tài khoản</label><input type="text" id="wd-account" placeholder="0123456789"></div><div class="field"><label>Chủ tài khoản</label><input type="text" id="wd-holder" placeholder="NGUYEN VAN A"></div><button class="btn-primary" id="wd-submit">Gửi yêu cầu rút tiền</button><div class="withdraw-note">Yêu cầu sẽ ở trạng thái "Đang xử lý" cho đến khi được quản trị viên duyệt và chuyển khoản.</div></div><div><div id="history-container"></div></div></div></section>
+    <section class="view" id="view-admin"><div class="section-head"><h2>Quản trị</h2><p>Nhập hoa hồng Shopee duyệt cho từng link — hệ thống tự trừ phí và chia hoa hồng.</p></div><div class="admin-summary"><div class="card"><div class="label">Tổng hoa hồng gốc</div><div class="amount" id="admin-total-gross">0đ</div></div><div class="card"><div class="label">Tổng thực nhận</div><div class="amount" id="admin-total-net">0đ</div></div><div class="card user"><div class="label">Đã trả thành viên (85%)</div><div class="amount" id="admin-total-user">0đ</div></div><div class="card admin"><div class="label">Admin giữ lại (15%)</div><div class="amount" id="admin-total-admin">0đ</div></div></div><div class="section-head tight" style="display:flex;justify-content:space-between;align-items:end;gap:14px;flex-wrap:wrap;"><div><h2>Tất cả link đã chuyển đổi</h2></div><button class="mini-btn" id="admin-refresh-products-btn">↻ Cập nhật tên & hình sản phẩm</button></div><div id="admin-links-container"></div><div class="section-head tight"><h2>Yêu cầu rút tiền chờ duyệt</h2></div><div class="admin-table-wrap"><table class="admin-table" id="admin-wd-table"><thead><tr><th>Mã YC</th><th>Khách</th><th>Số tiền</th><th>Ngân hàng</th><th>Số TK</th><th>Chủ TK</th><th>Thao tác</th></tr></thead><tbody></tbody></table></div></section>
+  </main><footer>HoànVí — dữ liệu lưu trên Google Sheets của bạn.</footer>
 </div>
-
-<!-- ===================== ĐỔI MẬT KHẨU (modal) ===================== -->
-<div class="modal-overlay" id="pw-modal">
-  <div class="modal-card">
-    <div class="modal-head"><h3>Đổi mật khẩu</h3><button class="modal-close" id="pw-modal-close">✕</button></div>
-    <div class="form-msg" id="pw-msg"></div>
-    <div class="field"><label>Mật khẩu hiện tại</label><input type="password" id="pw-old"></div>
-    <div class="field"><label>Mật khẩu mới</label><input type="password" id="pw-new" placeholder="Tối thiểu 6 ký tự"></div>
-    <div class="field"><label>Nhập lại mật khẩu mới</label><input type="password" id="pw-new2"></div>
-    <button class="btn-primary" id="pw-submit">Cập nhật mật khẩu</button>
-  </div>
-</div>
-
+<div class="modal-overlay" id="pw-modal"><div class="modal-card"><div class="modal-head"><h3>Đổi mật khẩu</h3><button class="modal-close" id="pw-modal-close">✕</button></div><div class="form-msg" id="pw-msg"></div><div class="field"><label>Mật khẩu hiện tại</label><input type="password" id="pw-old" autocomplete="current-password"></div><div class="field"><label>Mật khẩu mới</label><input type="password" id="pw-new" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự"></div><div class="field"><label>Nhập lại mật khẩu mới</label><input type="password" id="pw-new2" autocomplete="new-password"></div><button class="btn-primary" id="pw-submit">Cập nhật mật khẩu</button></div></div>
 <?!= include('App'); ?>
-
-</body>
-</html>
+</body></html>
