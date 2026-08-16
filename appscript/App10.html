@@ -1,0 +1,21 @@
+<script>
+  /* ---------- Cập nhật metadata sản phẩm ---------- */
+  document.getElementById('admin-refresh-products-btn').onclick = function(){
+    var btn = this;
+    setBtnLoading(btn, true, 'Đang cập nhật…');
+    call('adminBackfillProductMetadata', token).then(function(res){
+      setBtnLoading(btn, false);
+      if(!res.success){
+        alert(res.message || 'Không thể cập nhật metadata sản phẩm.');
+        return;
+      }
+      alert('Đã cập nhật ' + (res.updated || 0) + ' link sản phẩm.');
+      loadAdminPanel();
+      loadDashboard();
+    }).catch(function(){
+      setBtnLoading(btn, false);
+      alert('Có lỗi xảy ra khi cập nhật tên/hình sản phẩm.');
+    });
+  };
+
+</script>
