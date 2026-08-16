@@ -1,0 +1,40 @@
+<script>
+  /* ---------- Đổi mật khẩu (đã đăng nhập) ---------- */
+  document.getElementById('change-pw-btn').onclick = function(){
+    document.getElementById('pw-msg').className='form-msg';
+    document.getElementById('pw-old').value='';
+    document.getElementById('pw-new').value='';
+    document.getElementById('pw-new2').value='';
+    document.getElementById('pw-modal').classList.add('show');
+  };
+  document.getElementById('pw-modal-close').onclick = function(){
+    document.getElementById('pw-modal').classList.remove('show');
+  };
+  document.getElementById('pw-submit').onclick = function(){
+    var oldP = document.getElementById('pw-old').value;
+    var newP = document.getElementById('pw-new').value;
+    var newP2 = document.getElementById('pw-new2').value;
+    var msg = document.getElementById('pw-msg'); msg.className='form-msg';
+    if(!oldP || !newP){ msg.textContent='Vui lòng nhập đầy đủ.'; msg.className='form-msg error'; return; }
+    if(newP.length < 6){ msg.textContent='Mật khẩu mới tối thiểu 6 ký tự.'; msg.className='form-msg error'; return; }
+    if(newP !== newP2){ msg.textContent='Mật khẩu nhập lại không khớp.'; msg.className='form-msg error'; return; }
+    var btn = this;
+    setBtnLoading(btn, true, 'Đang cập nhật…');
+    call('changePassword', token, oldP, newP).then(function(res){
+      setBtnLoading(btn, false);
+      if(!res.success){ msg.textContent=res.message; msg.className='form-msg error'; return; }
+      msg.textContent='Đổi mật khẩu thành công.'; msg.className='form-msg ok';
+      setTimeout(function(){ document.getElementById('pw-modal').classList.remove('show'); }, 1200);
+    }).catch(function(){ setBtnLoading(btn, false); msg.textContent='Có lỗi xảy ra, thử lại.'; msg.className='form-msg error'; });
+  };
+
+  document.getElementById('logout-btn').onclick = function(){
+    call('logoutUser', token).then(function(){
+      localStorage.removeItem(TOKEN_KEY); token = null;
+      document.getElementById('app-screen').style.display='none';
+      document.getElementById('auth-screen').style.display='block';
+      showAuthPanel('login-form');
+    });
+  };
+
+</script>
